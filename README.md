@@ -1,4 +1,4 @@
-# AirBnB_clone_workstation# 0x00. AirBnB clone - The console
+# 0x00. AirBnB clone - The console
 
 ## Introduction
 
