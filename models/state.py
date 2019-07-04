@@ -4,4 +4,5 @@
 
 
 class State(BaseModel):
-    name = ""
+    def __init__(self):
+        self.name = ""

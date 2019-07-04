@@ -4,5 +4,7 @@
 
 
 class City(BaseModel):
-    state_id = ""
-    name = ""
+    """ my parent is BaseModel """
+    def __init__(self):
+        self.state_id = ""
+        self.name = ""
