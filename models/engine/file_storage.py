@@ -1,4 +1,4 @@
-#!/usr/bin/python3 
+#!/usr/bin/python3
 """File Storage Class"""
 """ task 5"""
 
@@ -7,10 +7,10 @@ from models.base_model import BaseModel
 import uuid
 from datetime import datetime
 
-class FileStorage(BaseModel):
+class FileStorage:
     """public instance attrs for FileStorage"""
 
-    __file_path = file.json
+    __file_path = "file.json"
     __objects = {}
 
     def all(self):
@@ -25,7 +25,7 @@ class FileStorage(BaseModel):
             if not isinstance(value, dict):
                 FileStorage.__objects[key] = value.to_dict()
             with open(FileStorage.__file_path, "w") as write_file:
-            json.dump(FileStorage.__objects, write_file)
+                json.dump(FileStorage.__objects, write_file)
 
     def reload(self):
         import os.path
