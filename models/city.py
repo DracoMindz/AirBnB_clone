@@ -5,6 +5,9 @@
 
 class City(BaseModel):
     """ my parent is BaseModel """
-    def __init__(self):
-        self.state_id = ""
-        self.name = ""
+    state_id = ""
+    name = ""
+
+    def __init__(self, *args, **kwargs):
+        """ init city """
+        super().__init__(*args, **kwargs)

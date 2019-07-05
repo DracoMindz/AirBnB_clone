@@ -3,9 +3,13 @@
 """ task 5"""
 
 import json
+import os.path
 from models.base_model import BaseModel
-import uuid
-from datetime import datetime
+from models.user import User
+from models.state import State
+from models.amenity import Amenity
+from models.place import Place
+from models.review import Review
 
 class FileStorage:
     """public instance attrs for FileStorage"""
@@ -14,32 +18,26 @@ class FileStorage:
     __objects = {}
 
     def all(self):
+        """ returns the objects dictionary """
         return FileStorage.__objects
 
     def new(self, obj):
-        key = obj.__class__.__name__ + '.' + obj.id
+        """ creates a new dictionary of object """
+        key = "{}.{}".format(type(obj).__name__, obj.id)
         FileStorage.__objects[key] = obj
 
     def save(self):
-        for key, value in FileStorage.__objects.items():
-            if not isinstance(value, dict):
-                FileStorage.__objects[key] = value.to_dict()
-            with open(FileStorage.__file_path, "w") as write_file:
-                json.dump(FileStorage.__objects, write_file)
+        """serializes the objects dictionary to json and writes to file"""
+        this_dict = {}
+        for key in FileStorage.__objects:
+            this_dict[key] = FileStorage.__objects[key].to_dict()
+        with open(FileStorage.__file_path, 'wt') as json_file:
+            json.dump(this_dict, json_file)
 
     def reload(self):
-        import os.path
-        from models.base_model import BaseModel
-        from models.user import User
-
-
-
-        if os.path.exists(FileStorage.__file_path):
-            with open(FileStorage.__file_path, "r") as my_file:
-                FileStorage.__objects = json.load(my_file)
-        for key, value in FileStorage.__objects.items():
-            if 'BaseModel' in key:
-                new_obj = BaseModel(None, **value)
-            elif 'User' in key:
-                new_obj = User(None, **value)
-            FileStorage.__objects[key] = new_obj
+        """ deserializes json from file to dictionary """
+        if os.path.isfile(FileStorage.__file_path):
+            with open(FileStorage.__file_path, "r+") as json_file:
+                obj_load = json.load(json_file)
+            for key, value in obj_load.items():
+                obj_load[key] = eval(value["__class__"])(**value)
