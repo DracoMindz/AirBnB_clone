@@ -98,6 +98,7 @@ class HBNBCommand(cmd.Cmd):
             print(abbaList)
 
     def do_update(self, args):
+        """updates instance based on the class name and id"""
         if not abbaList:
             print("** class name missing **")
         if abbaList[0] == 'BaseModel':
