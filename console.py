@@ -5,11 +5,28 @@
 import cmd
 import json
 import sys
+import inspect
+from models.engine.file_storage import FileStorage
+from models.amenity import Amenity
 from models.base_model import BaseModel
+from models.city import City
+from models.place import Place
+from models.review import Review
+from models.state import State
+from models.user import User
+from datetime import datetime
 
+from models.__init__ import storage
 
 class HBNBCommand(cmd.Cmd):
     prompt = '(hbnb) '
+
+    def get_classes(name=None):
+        current_module = sys.modules[sys.path()]
+        for obj_name, obj in inspect.getmembers(curent_module):
+            if obj_name == name and if inspect.isclass(obj):
+                return True
+        return False
 
     def do_quit(self, args):
         """ function that quits file"""
@@ -25,12 +42,13 @@ class HBNBCommand(cmd.Cmd):
 
     def do_create(self, args):
         """create new instance of BaseModel"""
-        bubbaList = args.split()
-        if not bubbaList:
+        arguments = args.split()
+        if not arguments:
             print("** class name missing **")
-            return
+            return False
+        
         try:
-            if bubbaList[0] == 'BaseModel':
+            if ar[0] == 'BaseModel':
                 x = BaseModel()
                 print(x.id)
                 x.save()
