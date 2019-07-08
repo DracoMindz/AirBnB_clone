@@ -32,12 +32,14 @@ class HBNBCommand(cmd.Cmd):
         try:
             if bubbaList[0] == 'BaseModel':
                 x = BaseModel()
+                print(x.id)
+                x.save()
             elif bubbaList[0] == 'User':
                 x = User()
+                print(x.id)
+                x.save()
             """ x = BaseModel() """
             """save id, print id"""
-            x.save()
-            print(x.id)
         except:
             print("** class doesn't exist **")
             print(args)
