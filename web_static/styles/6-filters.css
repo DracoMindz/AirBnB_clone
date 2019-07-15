@@ -28,7 +28,7 @@ button:hover{
   width: 25%;
   border-right: 1px solid #DDDDDD;
   padding-left: 5%;
-  margin-top: -10px;
+  margin-top: -20px;
 }
 
 
@@ -42,6 +42,7 @@ ul {
   border: 1px solid #DDDDDD;
   border-radius: 4px;
   width: auto;
+  position: relative;
 }
 
 .amenities .popover{
@@ -79,6 +80,7 @@ h3{
 h4{
   font-weight: 400;
   font-size: 14px;
-  margin-top: -12px;
   margin-left: 1px;
+  margin-top: -2px;
+
 }
