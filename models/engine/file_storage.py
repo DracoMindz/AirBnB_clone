@@ -36,8 +36,11 @@ class FileStorage:
 
     def reload(self):
         """ deserializes json from file to dictionary """
-        if os.path.isfile(FileStorage.__file_path):
-            with open(FileStorage.__file_path, "r+") as json_file:
-                obj_load = json.load(json_file)
-            for key, value in obj_load.items():
-                obj_load[key] = eval(value["__class__"])(**value)
+        try:
+            with open(FileStorage.__file_path, 'r', encoding="UTF-8") as f:
+                obj_load = json.load(f)
+                for key, value in (obj_load.items()):
+                    value = eval(value["__class__"])(**value)
+                    FileStorage.__objects[key] = value
+        except FileNotFoundError:
+            pass
