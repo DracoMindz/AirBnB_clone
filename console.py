@@ -37,120 +37,100 @@ class HBNBCommand(cmd.Cmd):
         except:
             print("** class doesn't exist **")
 
-    def do_show(self, line):
+    def do_show(self, arg):
         """prints string representation based on class name"""
-        try:
-            if not line:
-                raise SyntaxError()
-            arguments = line.split(" ")
-            if len(arguments) < 2:
-                raise IndexError()
-            if arguments[0] not in models.classes:
-                raise NameError()
-
-            objects = storage.all()
-            key = arguments[0] + '.' + arguments[1]
-            if key in objects:
-                print(objects[key])
-            else:
-                raise KeyError()
-
-        except SyntaxError:
+        arguments = arg.split()
+        if len(arguments) == 0:
             print("** class name missing **")
-        except NameError:
+            return False
+        if arguments[0] in models.classes:
+            if len(arguments) > 1:
+                keys = arguments[0] + "." + arguments[1]
+                if keys in models.storage.all():
+                    print(models.storage.all()[keys])
+                else:
+                    print("** no instance found **")
+            else:
+                print("** instance id missing **")
+        else:
             print("** class doesn't exist **")
-        except IndexError:
-            print("** instance id missing **")
-        except KeyError:
-            print("** no instance found **")
 
-    def do_destroy(self, line):
+    def do_destroy(self, arg):
         """deletes an instance based on the class name and id"""
-        try:
-            if not line:
-                raise SyntaxError()
-            arguments = line.split(" ")
-            if len(arguments) < 2:
-                raise IndexError()
-            if arguments[0] not in models.classes:
-                raise NameError()
-
-            objects = storage.all()
-            key = arguments[0] + '.' + arguments[1]
-            if key in objects:
-                del objects[key]
-                storage.save()
-            else:
-                raise KeyError()
-
-        except SyntaxError:
+        arguments = arg.split()
+        if len(arguments) == 0:
             print("** class name missing **")
-        except NameError:
+        elif arguments[0] in models.classes:
+            if len(arguments) > 1:
+                keys = arguments[0] + "." + arguments[1]
+                if keys in models.storage.all():
+                    models.storage.all().pop(keys)
+                    models.storage.save()
+                else:
+                    print("** no instance found **")
+            else:
+                print("** instance id missing **")
+        else:
             print("** class doesn't exist **")
-        except IndexError:
-            print("** instance id missing **")
-        except KeyError:
-            print("** no instance found **")
 
     def do_all(self, args):
         """prints all str reps of all instances based on class name"""
-        objects = storage.all()
-
-        list_keys = []
-        if not args:
-            for key in objects:
-                list_keys.append(objects[key])
-            print(my_list)
-            return
-        try:
-            arguments = args.split()
-            if arguments[0] not in models.classes:
-                print("** class doesn't exist **")
-                return
-            for key in objects:
-                name = key.split('.')
-                if name[0] == arguments[0]:
-                    key_list.append(objects[key])
-            print(key_list)
-        except NameError:
+        arguments = args.split()
+        instance_list = []
+        if len(arguments) == 0:
+            for v in models.storage.all().values():
+                instance_list.append(str(v))
+            print("[", end="")
+            print(", ".join(instance_list), end="")
+            print("]")
+        elif arguments[0] in models.classes:
+            for keys in models.storage.all():
+                if arguments[0] in keys:
+                    instance_list.append(str(models.storage.all()[keys]))
+            print("[", end="")
+            print(", ".join(instance_list), end="")
+            print("]")
+        else:
             print("** class doesn't exist **")
 
-    def do_update(self, line):
+    def do_update(self, arg):
         """add or update a current attribute"""
-        try:
-            if not line:
-                raise SyntaxError()
-            my_list = split(line, " ")
-            if my_list[0] not in self.all_classes:
-                raise NameError()
-            if len(my_list) < 2:
-                raise IndexError()
-            objects = storage.all()
-            key = my_list[0] + '.' + my_list[1]
-            if key not in objects:
-                raise KeyError()
-            if len(my_list) < 3:
-                raise AttributeError()
-            if len(my_list) < 4:
-                raise ValueError()
-            v = objects[key]
-            try:
-                v.__dict__[my_list[2]] = eval(my_list[3])
-            except Exception:
-                v.__dict__[my_list[2]] = my_list[3]
-                v.save()
-        except SyntaxError:
+        arguments = arg.split()
+        float = ["latitude", "longitude"]
+        int = ["number_rooms", "number_bathrooms",
+               "max_guest", "price_by_night"]
+        if len(arguments) == 0:
             print("** class name missing **")
-        except NameError:
+        elif arguments[0] in models.classes:
+            if len(arguments) > 1:
+                keys = arguments[0] + "." + arguments[1]
+                if keys in models.storage.all():
+                    if len(arguments) > 2:
+                        if len(arguments) > 3:
+                            if arguments[0] == "Place":
+                                if arguments[2] in int:
+                                    try:
+                                        arguments[3] = int(arguments[3])
+                                    except:
+                                        arguments[3] = 0
+                                elif arguments[2] in float:
+                                    try:
+                                        arguments[3] = float(arguments[3])
+                                    except:
+                                        arguments[3] = 0.0
+                            setattr(models.storage.all()[keys],
+                                    arguments[2], arguments[3])
+                            models.storage.all()[keys].save()
+                        else:
+                            print("** value missing **")
+                    else:
+                        print("** attribute name missing **")
+                else:
+                    print("** no instance found **")
+            else:
+                print("** instance id missing **")
+        else:
             print("** class doesn't exist **")
-        except IndexError:
-            print("** instance id missing **")
-        except KeyError:
-            print("** no instance found **")
-        except AttributeError:
-            print("** attribute name missing **")
-        except ValueError:
-            print("** value missing **")
 
     def do_count(self, line):
         """counts the number of instances of a class"""
@@ -168,3 +148,6 @@ class HBNBCommand(cmd.Cmd):
 
         except NameError:
             print("** class doesn't exist **")
+
+if __name__ == '__main__':
+        HBNBCommand().cmdloop()
