@@ -1,6 +1,8 @@
 #!/usr/bin/python3
 """ City class"""
 """ task 9"""
+from models.base_model import BaseModel
+
 
 
 class City(BaseModel):

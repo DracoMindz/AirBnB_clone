@@ -2,6 +2,7 @@
 """ User class"""
 from models.base_model import BaseModel
 
+
 class User(BaseModel):
     """ class User that inherits from BaseModel"""
     """ Task 8 """
