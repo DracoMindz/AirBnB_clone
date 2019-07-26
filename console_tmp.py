@@ -120,25 +120,29 @@ class HBNBCommand(cmd.Cmd):
         try:
             if not line:
                 raise SyntaxError()
-            my_list = split(line, " ")
-            if my_list[0] not in self.all_classes:
-                raise NameError()
-            if len(my_list) < 2:
+            arguments = split(line, " ")
+
+            class_name = arguments[0]
+            class_id = arguments[1]
+
+            if class_name not in models.classes:
+                raise KeyError()
+            if len(arguments) < 2:
                 raise IndexError()
             objects = storage.all()
-            key = my_list[0] + '.' + my_list[1]
+            key = class_name + '.' + class_id
             if key not in objects:
                 raise KeyError()
-            if len(my_list) < 3:
+            if len(arguments) < 3:
                 raise AttributeError()
-            if len(my_list) < 4:
+            if len(arguments) < 4:
                 raise ValueError()
-            v = objects[key]
+            obj = objects[key]
             try:
-                v.__dict__[my_list[2]] = eval(my_list[3])
+                obj.__dict__[arguments[2]] = eval(arguments[3])
             except Exception:
-                v.__dict__[my_list[2]] = my_list[3]
-                v.save()
+                obj.__dict__[arguments[2]] = arguments[3]
+                obj.save()
         except SyntaxError:
             print("** class name missing **")
         except NameError:
